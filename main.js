@@ -1,6 +1,6 @@
 /**
- * Aryan Portfolio - Smooth Scroll-Driven Frame Animation Engine
- * 872 Frames sequence renderer with High-DPI canvas & adaptive caching
+ * Aryan Kumar Swain Portfolio — Motion Engine & Frame Sequence Renderer
+ * 872 Frames sequence renderer with High-DPI canvas & adaptive background caching
  */
 
 const TOTAL_FRAMES = 872;
@@ -13,7 +13,6 @@ const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
 const loader = document.getElementById('loader');
 const loaderBar = document.getElementById('loader-bar');
 const loaderPercent = document.getElementById('loader-percent');
-const loaderStatus = document.getElementById('loader-status');
 const hud = document.getElementById('hud');
 const hudFrame = document.getElementById('hud-frame');
 const hudProgress = document.getElementById('hud-progress');
@@ -29,7 +28,6 @@ const loading = new Uint8Array(TOTAL_FRAMES);
 
 let loadedCount = 0;
 let isInitialReady = false;
-let currentFrameIndex = 0;
 let targetProgress = 0;
 let currentProgress = 0;
 let lastRenderedFrame = -1;
@@ -63,7 +61,7 @@ function loadSingleFrame(index) {
   });
 }
 
-// Aspect ratio cover rendering on canvas
+// Aspect ratio cover rendering on canvas with automatic watermark masking
 function drawImageCover(img) {
   if (!img || !img.naturalWidth) return;
 
@@ -80,6 +78,16 @@ function drawImageCover(img) {
   const dy = (ch - dh) * 0.5;
 
   ctx.drawImage(img, dx, dy, dw, dh);
+
+  // Mask Gemini watermark in bottom right corner
+  // The frame is 1080x608 with the watermark in the bottom-right corner.
+  // Because the background is solid black, filling this corner completely conceals the watermark.
+  const wmWidth = dw * 0.16;
+  const wmHeight = dh * 0.22;
+  const wmX = dx + dw - wmWidth;
+  const wmY = dy + dh - wmHeight;
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(wmX, wmY, wmWidth + 4, wmHeight + 4);
 }
 
 // Find nearest loaded frame for zero-flicker fallback
@@ -132,28 +140,28 @@ function updateHUD(frameIndex, progress) {
   }
 }
 
-// Scroll calculation
+// Scroll calculation spanning the entire document height
 function onScroll() {
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  if (maxScroll > 0) {
-    targetProgress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+  const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+  if (scrollableHeight > 0) {
+    targetProgress = Math.min(Math.max(window.scrollY / scrollableHeight, 0), 1);
   } else {
     targetProgress = 0;
   }
 
-  if (window.scrollY > 30) {
-    scrollPrompt.classList.add('hidden');
+  if (window.scrollY > 40) {
+    if (scrollPrompt) scrollPrompt.classList.add('hidden');
   } else {
-    scrollPrompt.classList.remove('hidden');
+    if (scrollPrompt) scrollPrompt.classList.remove('hidden');
   }
 }
 
 // Smooth Linear Interpolation Animation Loop
 function animationLoop() {
-  // Inertia lerp
+  // Inertia lerp for ultra-smooth scrubbing
   const diff = targetProgress - currentProgress;
   if (Math.abs(diff) > 0.00005) {
-    currentProgress += diff * 0.09;
+    currentProgress += diff * 0.1;
   } else {
     currentProgress = targetProgress;
   }
@@ -169,7 +177,7 @@ function animationLoop() {
     updateHUD(frameIdx, currentProgress);
   }
 
-  // Adaptive background queue priority update
+  // Adaptive background queue priority update around current playhead
   ensureLocalBuffer(frameIdx);
 
   requestAnimationFrame(animationLoop);
@@ -216,9 +224,8 @@ function queueFrame(index, highPriority = false) {
 
 // Buffer frames around current playback head
 function ensureLocalBuffer(centerIdx) {
-  // Immediate vicinity (forward & backward)
-  const forwardWindow = 25;
-  const backwardWindow = 10;
+  const forwardWindow = 30;
+  const backwardWindow = 12;
 
   for (let i = 1; i <= forwardWindow; i++) {
     queueFrame(centerIdx + i, true);
@@ -228,11 +235,32 @@ function ensureLocalBuffer(centerIdx) {
   }
 }
 
+// Setup skill bars intersection observer
+function setupInteractions() {
+  const skillTrackers = document.querySelectorAll('.skill-fill');
+  if ('IntersectionObserver' in window && skillTrackers.length > 0) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.width = entry.target.style.getPropertyValue('--target-width') || '100%';
+        }
+      });
+    }, { threshold: 0.2 });
+
+    skillTrackers.forEach((tracker) => {
+      tracker.style.width = '0%';
+      observer.observe(tracker);
+    });
+  }
+}
+
 // Progressive Initial Loading
 async function init() {
   handleResize();
   window.addEventListener('resize', handleResize, { passive: true });
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  setupInteractions();
 
   // 1. First priority: Frame 0
   await loadSingleFrame(0);
@@ -246,8 +274,8 @@ async function init() {
     initialBurst.push(
       loadSingleFrame(i).then(() => {
         const pct = Math.round((loadedCount / burstCount) * 100);
-        loaderBar.style.width = `${pct}%`;
-        loaderPercent.textContent = `${pct}%`;
+        if (loaderBar) loaderBar.style.width = `${pct}%`;
+        if (loaderPercent) loaderPercent.textContent = `${pct}%`;
       })
     );
   }
@@ -260,40 +288,24 @@ async function init() {
   await Promise.all(initialBurst);
 
   // Ready! Fade out loader
-  loader.classList.add('hidden');
+  if (loader) loader.classList.add('hidden');
 
-  const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
-
-  if (!hasSeenIntro) {
-    // First time visitor: Play Intro
-    document.body.classList.add('no-scroll');
+  // Play Zoom-in Intro Animation
+  document.body.classList.add('no-scroll');
+  
+  setTimeout(() => {
+    if (introLogo) introLogo.classList.add('animate-zoom');
     
-    // Hold the large logo for a brief moment, then animate
+    // Smoothly reveal UI as logo zooms toward the user
     setTimeout(() => {
-      introLogo.classList.add('animate-up');
+      if (introOverlay) introOverlay.classList.add('hidden');
+      if (hud) hud.classList.add('active');
+      document.body.classList.remove('no-scroll');
       
-      // Wait for transform to mostly complete before revealing UI
-      setTimeout(() => {
-        introOverlay.classList.add('hidden');
-        navbar.classList.add('visible');
-        hud.classList.add('active');
-        scrollPrompt.classList.add('visible');
-        document.body.classList.remove('no-scroll');
-        
-        sessionStorage.setItem('hasSeenIntro', 'true');
-        isInitialReady = true;
-        requestAnimationFrame(animationLoop);
-      }, 1200); // Corresponds to CSS transition timing
-    }, 600); // Initial hold time
-  } else {
-    // Returning visitor: Skip intro instantly
-    introOverlay.style.display = 'none';
-    navbar.classList.add('visible');
-    hud.classList.add('active');
-    scrollPrompt.classList.add('visible');
-    isInitialReady = true;
-    requestAnimationFrame(animationLoop);
-  }
+      isInitialReady = true;
+      requestAnimationFrame(animationLoop);
+    }, 700);
+  }, 450);
 
   // 4. Fill in remaining frames progressively in background
   for (let i = burstCount; i < TOTAL_FRAMES; i++) {
