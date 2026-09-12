@@ -242,3 +242,68 @@ html, body {
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }
+
+/* Body Scroll Lock */
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 32px 48px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar.visible {
+  opacity: 1;
+}
+
+.nav-logo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Intro Overlay */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background-color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s;
+}
+
+.intro-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.intro-logo {
+  width: min(500px, 70vw);
+  height: auto;
+  object-fit: contain;
+  transform: scale(1) translateY(0);
+  transition: transform 1.5s cubic-bezier(0.85, 0, 0.15, 1), opacity 1.2s ease;
+  will-change: transform, opacity;
+}
+
+.intro-logo.animate-up {
+  transform: scale(0.3) translateY(-30vh);
+  opacity: 0;
+}
+

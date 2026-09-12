@@ -18,6 +18,9 @@ const hud = document.getElementById('hud');
 const hudFrame = document.getElementById('hud-frame');
 const hudProgress = document.getElementById('hud-progress');
 const scrollPrompt = document.getElementById('scroll-prompt');
+const introOverlay = document.getElementById('intro-overlay');
+const introLogo = document.getElementById('intro-logo');
+const navbar = document.getElementById('navbar');
 
 // State
 const images = new Array(TOTAL_FRAMES);
@@ -258,12 +261,39 @@ async function init() {
 
   // Ready! Fade out loader
   loader.classList.add('hidden');
-  hud.classList.add('active');
-  scrollPrompt.classList.add('visible');
-  isInitialReady = true;
 
-  // Start smooth animation loop
-  requestAnimationFrame(animationLoop);
+  const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
+
+  if (!hasSeenIntro) {
+    // First time visitor: Play Intro
+    document.body.classList.add('no-scroll');
+    
+    // Hold the large logo for a brief moment, then animate
+    setTimeout(() => {
+      introLogo.classList.add('animate-up');
+      
+      // Wait for transform to mostly complete before revealing UI
+      setTimeout(() => {
+        introOverlay.classList.add('hidden');
+        navbar.classList.add('visible');
+        hud.classList.add('active');
+        scrollPrompt.classList.add('visible');
+        document.body.classList.remove('no-scroll');
+        
+        sessionStorage.setItem('hasSeenIntro', 'true');
+        isInitialReady = true;
+        requestAnimationFrame(animationLoop);
+      }, 1200); // Corresponds to CSS transition timing
+    }, 600); // Initial hold time
+  } else {
+    // Returning visitor: Skip intro instantly
+    introOverlay.style.display = 'none';
+    navbar.classList.add('visible');
+    hud.classList.add('active');
+    scrollPrompt.classList.add('visible');
+    isInitialReady = true;
+    requestAnimationFrame(animationLoop);
+  }
 
   // 4. Fill in remaining frames progressively in background
   for (let i = burstCount; i < TOTAL_FRAMES; i++) {
