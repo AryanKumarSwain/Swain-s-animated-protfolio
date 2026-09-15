@@ -70,11 +70,28 @@ function drawImageCover(img) {
   const iw = img.naturalWidth;
   const ih = img.naturalHeight;
 
+  // Clear canvas before drawing for seamless black background
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, cw, ch);
+
   // Cover calculation
   const scale = Math.max(cw / iw, ch / ih);
   const dw = iw * scale;
   const dh = ih * scale;
-  const dx = (cw - dw) * 0.5;
+
+  // On desktop screens, shift character slightly to the right to leave open space for typography
+  // This matches the reference layout and prevents text from overlapping the character's face
+  let offsetX = 0;
+  const winW = window.innerWidth;
+  if (winW >= 1280) {
+    offsetX = cw * 0.15;
+  } else if (winW >= 1024) {
+    offsetX = cw * 0.11;
+  } else if (winW >= 768) {
+    offsetX = cw * 0.06;
+  }
+
+  const dx = (cw - dw) * 0.5 + offsetX;
   const dy = (ch - dh) * 0.5;
 
   ctx.drawImage(img, dx, dy, dw, dh);

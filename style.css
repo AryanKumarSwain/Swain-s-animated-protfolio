@@ -92,12 +92,12 @@ body {
   will-change: transform;
 }
 
-/* Subtle Gradient Wash to Ensure Flawless Text Readability */
+/* High-Clarity Dynamic Overlay — Keeps background frame character bright & vivid while ensuring text readability on the left */
 .canvas-gradient-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 75% 45%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.6) 60%, #000000 95%),
-              linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.7) 85%, #000000 100%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.55) 30%, rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0) 70%),
+              linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 15%, transparent 85%, rgba(0, 0, 0, 0.6) 100%);
   pointer-events: none;
 }
 
@@ -436,19 +436,21 @@ body.no-scroll {
   flex-direction: column;
   gap: 28px;
   z-index: 5;
+  max-width: 520px;
+  width: 100%;
 }
 
 .hero-title-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .hero-headline {
   font-family: var(--font-display);
-  font-size: clamp(64px, 8.5vw, 120px);
+  font-size: clamp(38px, 4.8vw, 72px);
   font-weight: 800;
-  line-height: 0.88;
+  line-height: 0.95;
   letter-spacing: -0.02em;
   text-transform: uppercase;
   display: flex;
@@ -457,6 +459,7 @@ body.no-scroll {
 
 .hero-word {
   display: block;
+  white-space: nowrap;
 }
 
 .hero-star {
@@ -678,15 +681,15 @@ body.no-scroll {
 
 .hero-red-accent-card {
   position: absolute;
-  top: 10%;
+  top: 8%;
   right: 0;
-  width: 220px;
-  height: 380px;
-  background: linear-gradient(135deg, rgba(230, 57, 70, 0.75) 0%, rgba(180, 20, 35, 0.4) 100%);
+  width: 240px;
+  height: 420px;
+  background: linear-gradient(145deg, rgba(230, 57, 70, 0.35) 0%, rgba(180, 20, 35, 0.1) 100%);
+  border: 1px solid rgba(230, 57, 70, 0.25);
   border-radius: 8px;
   z-index: 1;
-  opacity: 0.65;
-  filter: blur(1px);
+  pointer-events: none;
 }
 
 /* Scroll Prompt */
