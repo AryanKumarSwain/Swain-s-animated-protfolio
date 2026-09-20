@@ -92,7 +92,8 @@ function drawImageCover(img) {
   }
 
   const dx = (cw - dw) * 0.5 + offsetX;
-  const dy = (ch - dh) * 0.5;
+  const verticalOffset = Math.min(ch * 0.06, 52);
+  const dy = (ch - dh) * 0.5 + verticalOffset;
 
   ctx.drawImage(img, dx, dy, dw, dh);
 
