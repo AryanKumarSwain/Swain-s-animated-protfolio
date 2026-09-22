@@ -93,8 +93,8 @@ function drawImageCover(img, index = 0) {
   // Choreographed horizontal positioning:
   // 1. Frame 0 -> 182: Smoothly shift from right to left as character turns to face right
   // 2. Frame 182 -> 333: Hold position on the left side
-  // 3. Frame 333 -> 544: Smoothly shift from left to right as character turns to face left
-  // 4. Frame 544 -> 721: Hold position on the right side
+  // 3. Frame 333 -> 535: Smoothly shift from left to right as character turns to face left
+  // 4. Frame 535 -> 721: Hold position on the right side
   // 5. Frame 721 -> 872: Smoothly shift into center for contact / finale
   let offsetX;
   let heroExitProgress = 0;
@@ -107,8 +107,8 @@ function drawImageCover(img, index = 0) {
   } else if (index < 333) {
     offsetX = leftOffset;
     heroExitProgress = 1;
-  } else if (index <= 544) {
-    const p = Math.min(Math.max((index - 333) / (544 - 333), 0), 1);
+  } else if (index <= 535) {
+    const p = Math.min(Math.max((index - 333) / (535 - 333), 0), 1);
     const ease = 0.5 - 0.5 * Math.cos(p * Math.PI);
     offsetX = leftOffset + (rightOffset - leftOffset) * ease;
     heroExitProgress = 1;
