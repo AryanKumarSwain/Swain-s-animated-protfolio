@@ -13,9 +13,6 @@ const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
 const loader = document.getElementById('loader');
 const loaderBar = document.getElementById('loader-bar');
 const loaderPercent = document.getElementById('loader-percent');
-const hud = document.getElementById('hud');
-const hudFrame = document.getElementById('hud-frame');
-const hudProgress = document.getElementById('hud-progress');
 const scrollPrompt = document.getElementById('scroll-prompt');
 const introOverlay = document.getElementById('intro-overlay');
 const introLogo = document.getElementById('intro-logo');
@@ -62,7 +59,7 @@ function loadSingleFrame(index) {
 }
 
 // Aspect ratio cover rendering on canvas with automatic watermark masking
-function drawImageCover(img) {
+function drawImageCover(img, index = 0) {
   if (!img || !img.naturalWidth) return;
 
   const cw = canvas.width;
@@ -79,16 +76,51 @@ function drawImageCover(img) {
   const dw = iw * scale;
   const dh = ih * scale;
 
-  // On desktop screens, shift character slightly to the right to leave open space for typography
-  // This matches the reference layout and prevents text from overlapping the character's face
-  let offsetX = 0;
+  // Horizontal responsive offsets (right vs left)
+  let rightOffset = 0;
   const winW = window.innerWidth;
-  if (winW >= 1280) {
-    offsetX = cw * 0.15;
+  if (winW >= 1440) {
+    rightOffset = cw * 0.22;
+  } else if (winW >= 1280) {
+    rightOffset = cw * 0.20;
   } else if (winW >= 1024) {
-    offsetX = cw * 0.11;
+    rightOffset = cw * 0.15;
   } else if (winW >= 768) {
-    offsetX = cw * 0.06;
+    rightOffset = cw * 0.08;
+  }
+  const leftOffset = -rightOffset;
+
+  // Choreographed horizontal positioning:
+  // 1. Frame 0 -> 182: Smoothly shift from right to left as character turns to face right
+  // 2. Frame 182 -> 333: Hold position on the left side
+  // 3. Frame 333 -> 544: Smoothly shift from left to right as character turns to face left
+  // 4. Frame 544 -> 721: Hold position on the right side
+  // 5. Frame 721 -> 872: Smoothly shift into center for contact / finale
+  let offsetX;
+  let heroExitProgress = 0;
+
+  if (index <= 182) {
+    const p = Math.min(Math.max(index / 182, 0), 1);
+    const ease = 0.5 - 0.5 * Math.cos(p * Math.PI);
+    offsetX = rightOffset + (leftOffset - rightOffset) * ease;
+    heroExitProgress = ease;
+  } else if (index < 333) {
+    offsetX = leftOffset;
+    heroExitProgress = 1;
+  } else if (index <= 544) {
+    const p = Math.min(Math.max((index - 333) / (544 - 333), 0), 1);
+    const ease = 0.5 - 0.5 * Math.cos(p * Math.PI);
+    offsetX = leftOffset + (rightOffset - leftOffset) * ease;
+    heroExitProgress = 1;
+  } else if (index < 721) {
+    offsetX = rightOffset;
+    heroExitProgress = 1;
+  } else {
+    // 721 to 872: Smoothly shift from right to center (0)
+    const p = Math.min(Math.max((index - 721) / (872 - 721), 0), 1);
+    const ease = 0.5 - 0.5 * Math.cos(p * Math.PI);
+    offsetX = rightOffset + (0 - rightOffset) * ease;
+    heroExitProgress = 1;
   }
 
   const dx = (cw - dw) * 0.5 + offsetX;
@@ -106,6 +138,12 @@ function drawImageCover(img) {
   const wmY = dy + dh - wmHeight;
   ctx.fillStyle = '#000000';
   ctx.fillRect(wmX, wmY, wmWidth + 4, wmHeight + 4);
+
+  // Dynamically fade out the left gradient overlay as the hero exits
+  const canvasViewport = document.getElementById('canvas-viewport');
+  if (canvasViewport) {
+    canvasViewport.style.setProperty('--overlay-left-alpha', (0.85 * (1 - heroExitProgress)).toFixed(3));
+  }
 }
 
 // Find nearest loaded frame for zero-flicker fallback
@@ -126,7 +164,7 @@ function getBestFrame(targetIdx) {
 function renderFrame(index) {
   const img = getBestFrame(index);
   if (img) {
-    drawImageCover(img);
+    drawImageCover(img, index);
   }
 }
 
@@ -148,15 +186,6 @@ function handleResize() {
   }
 }
 
-// Update HUD elements
-function updateHUD(frameIndex, progress) {
-  if (hudFrame) {
-    hudFrame.textContent = `${String(frameIndex + 1).padStart(3, '0')} / ${TOTAL_FRAMES}`;
-  }
-  if (hudProgress) {
-    hudProgress.textContent = `${Math.round(progress * 100)}%`;
-  }
-}
 
 // Scroll calculation spanning the entire document height
 function onScroll() {
@@ -192,7 +221,6 @@ function animationLoop() {
   if (frameIdx !== lastRenderedFrame) {
     renderFrame(frameIdx);
     lastRenderedFrame = frameIdx;
-    updateHUD(frameIdx, currentProgress);
   }
 
   // Adaptive background queue priority update around current playhead
@@ -317,7 +345,6 @@ async function init() {
     // Smoothly reveal UI as logo zooms toward the user
     setTimeout(() => {
       if (introOverlay) introOverlay.classList.add('hidden');
-      if (hud) hud.classList.add('active');
       document.body.classList.remove('no-scroll');
       
       isInitialReady = true;

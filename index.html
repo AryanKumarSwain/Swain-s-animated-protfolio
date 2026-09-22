@@ -16,7 +16,7 @@
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 
 <body>
@@ -44,18 +44,6 @@
     <div class="canvas-gradient-overlay"></div>
   </div>
 
-  <!-- Scroll Progress / Frame Indicator (HUD) -->
-  <div class="hud" id="hud">
-    <div class="hud-item">
-      <span class="hud-label">FRAME</span>
-      <span class="hud-value" id="hud-frame">001 / 872</span>
-    </div>
-    <div class="hud-divider"></div>
-    <div class="hud-item">
-      <span class="hud-label">PROGRESS</span>
-      <span class="hud-value" id="hud-progress">0%</span>
-    </div>
-  </div>
 
   <!-- Header / Navbar -->
   <header class="navbar" id="navbar">
@@ -185,27 +173,53 @@
       </div>
     </section>
 
-    <!-- Stats Bar (Matching reference) -->
-    <section class="stats-section">
-      <div class="stats-bar">
-        <div class="stat-card">
-          <div class="stat-number">3<span class="stat-plus">+</span></div>
-          <div class="stat-label">YEARS OF EXPERIENCE</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-card">
-          <div class="stat-number">25<span class="stat-plus">+</span></div>
-          <div class="stat-label">PROJECTS COMPLETED</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-card">
-          <div class="stat-number">15<span class="stat-plus">+</span></div>
-          <div class="stat-label">HAPPY CLIENTS</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-card stat-highlight">
-          <div class="stat-number accent-color">99<span class="stat-percent">%</span></div>
-          <div class="stat-label">CLIENT SATISFACTION</div>
+    <!-- Overview & Track Record Section (Frames 182 -> 333: Character is in clear view on Left; content strictly on Right) -->
+    <section class="overview-section" id="overview">
+      <div class="overview-grid">
+        <!-- Left spacer column: 100% transparent & open for character who is on the left facing right -->
+        <div class="overview-character-space" aria-hidden="true"></div>
+
+        <!-- Right Content & Information Column -->
+        <div class="overview-content">
+          <div class="overview-tag-pill">
+            <span class="pill-dot"></span>
+            01 / IMPACT &amp; CAPABILITIES
+          </div>
+
+          <h2 class="overview-headline">
+            ARCHITECTING DIGITAL PRODUCTS <span class="highlight-red">THAT DELIVER MEASURABLE RESULTS.</span>
+          </h2>
+
+          <p class="overview-bio">
+            Full-stack engineer and UI/UX designer dedicated to building high-performance web applications, scalable architectures, and intuitive digital experiences. Combining technical precision with creative strategy.
+          </p>
+
+          <!-- 4-Stat Cards Grid (High-Precision Glass Cards) -->
+          <div class="overview-stats-grid">
+            <div class="overview-stat-card">
+              <div class="stat-number">3<span class="stat-plus">+</span></div>
+              <div class="stat-label">YEARS EXPERIENCE</div>
+            </div>
+            <div class="overview-stat-card">
+              <div class="stat-number">25<span class="stat-plus">+</span></div>
+              <div class="stat-label">PROJECTS DELIVERED</div>
+            </div>
+            <div class="overview-stat-card">
+              <div class="stat-number">15<span class="stat-plus">+</span></div>
+              <div class="stat-label">HAPPY CLIENTS</div>
+            </div>
+            <div class="overview-stat-card stat-highlight">
+              <div class="stat-number accent-color">99<span class="stat-percent">%</span></div>
+              <div class="stat-label">SATISFACTION RATE</div>
+            </div>
+          </div>
+
+          <div class="overview-tags-row">
+            <span class="tech-pill">MERN STACK</span>
+            <span class="tech-pill">REACT &amp; NEXT.JS</span>
+            <span class="tech-pill">TYPESCRIPT</span>
+            <span class="tech-pill">UI/UX DESIGN</span>
+          </div>
         </div>
       </div>
     </section>
@@ -321,192 +335,10 @@
       </div>
     </section>
 
-    <!-- Services Section (Exact Reference Layout) -->
-    <section class="services-section" id="services">
-      <div class="services-grid">
-        <!-- Left Red Accent Title Card -->
-        <div class="services-banner-card">
-          <div class="services-banner-content">
-            <h2 class="services-banner-title">SERVICES</h2>
-            <div class="services-banner-arrow">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right 4-Grid Service Offerings -->
-        <div class="services-items-grid">
-          <!-- Service 1 -->
-          <div class="service-item">
-            <div class="service-icon-wrap">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                <line x1="8" y1="21" x2="16" y2="21"></line>
-                <line x1="12" y1="17" x2="12" y2="21"></line>
-              </svg>
-            </div>
-            <div class="service-text">
-              <h3 class="service-title">WEB DESIGN & DEV</h3>
-              <p class="service-description">Custom websites and web applications that are beautiful, high-performing,
-                and conversion-focused.</p>
-            </div>
-          </div>
-
-          <!-- Service 2 -->
-          <div class="service-item">
-            <div class="service-icon-wrap">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                <path d="M2 2l7.586 7.586"></path>
-                <circle cx="11" cy="11" r="2"></circle>
-              </svg>
-            </div>
-            <div class="service-text">
-              <h3 class="service-title">UI/UX DESIGN</h3>
-              <p class="service-description">Intuitive interfaces, design systems, and seamless user experiences crafted
-                in Figma that users love to interact with.</p>
-            </div>
-          </div>
-
-          <!-- Service 3 -->
-          <div class="service-item">
-            <div class="service-icon-wrap">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                </polygon>
-              </svg>
-            </div>
-            <div class="service-text">
-              <h3 class="service-title">GRAPHIC & BRANDING</h3>
-              <p class="service-description">Strong visual identities, typography systems, vector illustrations, and
-                brand assets that make your presence unforgettable.</p>
-            </div>
-          </div>
-
-          <!-- Service 4 -->
-          <div class="service-item">
-            <div class="service-icon-wrap">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="16 18 22 12 16 6"></polyline>
-                <polyline points="8 6 2 12 8 18"></polyline>
-              </svg>
-            </div>
-            <div class="service-text">
-              <h3 class="service-title">MERN FULL STACK</h3>
-              <p class="service-description">Clean, scalable architectures, secure RESTful APIs, and fast databases with
-                MongoDB, Express, React, and Node.js.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Me Section (Matching Reference Layout) -->
-    <section class="about-section" id="about">
-      <div class="about-grid">
-        <!-- Left Column: Statement & Bio -->
-        <div class="about-left">
-          <div class="about-tag">ABOUT ME</div>
-          <h2 class="about-headline">
-            DESIGN IS SOLVING PROBLEMS WITH EMPATHY AND CREATIVITY.
-          </h2>
-          <p class="about-paragraph">
-            I’m a full stack developer with a love for building modern, meaningful web experiences — always curious and
-            ready to solve the next challenge. My day-to-day work centers around the MERN stack and front-end tech like
-            React.js and Tailwind CSS.
-          </p>
-          <p class="about-paragraph">
-            Beyond code, playing the guitar and flute brings music into my life, while sketching and portrait art
-            nurture my creativity and mindfulness. Regular gym workouts keep me energetic, focused, and healthy.
-          </p>
-          <div class="about-signature-wrap">
-            <span class="about-signature">Aryan Kumar Swain</span>
-          </div>
-        </div>
-
-        <!-- Center Column: Visual Graphic Block -->
-        <div class="about-center">
-          <div class="about-portrait-card">
-            <div class="about-red-backdrop"></div>
-            <div class="about-visual-overlay">
-              <img src="swainLogo.png" alt="Swain Brand" class="about-brand-icon">
-              <div class="about-caption">MERN • UI/UX • CREATIVE</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Skills Progress Bars & Resume -->
-        <div class="about-right">
-          <div class="skills-list">
-            <div class="skill-row">
-              <div class="skill-info">
-                <span class="skill-name">WEB & MERN DEVELOPMENT</span>
-                <span class="skill-val">95%</span>
-              </div>
-              <div class="skill-track">
-                <div class="skill-fill" style="--target-width: 95%;"></div>
-              </div>
-            </div>
-
-            <div class="skill-row">
-              <div class="skill-info">
-                <span class="skill-name">UI/UX & FIGMA DESIGN</span>
-                <span class="skill-val">90%</span>
-              </div>
-              <div class="skill-track">
-                <div class="skill-fill" style="--target-width: 90%;"></div>
-              </div>
-            </div>
-
-            <div class="skill-row">
-              <div class="skill-info">
-                <span class="skill-name">TYPESCRIPT & JAVASCRIPT</span>
-                <span class="skill-val">92%</span>
-              </div>
-              <div class="skill-track">
-                <div class="skill-fill" style="--target-width: 92%;"></div>
-              </div>
-            </div>
-
-            <div class="skill-row">
-              <div class="skill-info">
-                <span class="skill-name">DATABASES (MONGODB & MYSQL)</span>
-                <span class="skill-val">85%</span>
-              </div>
-              <div class="skill-track">
-                <div class="skill-fill" style="--target-width: 85%;"></div>
-              </div>
-            </div>
-          </div>
-
-          <a href="https://drive.google.com/file/d/173FW0jxBxwJafJapRmkyZjyjMNDnNvYN/view?usp=sharing" target="_blank"
-            rel="noopener noreferrer" class="btn-download-resume">
-            DOWNLOAD RESUME
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
     <!-- Technologies Ticker (Editorial Brand/Tech Style) -->
     <section class="ticker-section" id="technologies">
       <div class="ticker-label-wrap">
-        <span class="ticker-label">TECHNOLOGIES & TOOLS</span>
+        <span class="ticker-label">TECHNOLOGIES &amp; TOOLS</span>
       </div>
       <div class="ticker-track">
         <div class="ticker-content">
@@ -528,12 +360,11 @@
           <span class="ticker-dot">•</span>
           <span class="ticker-item">REDUX</span>
           <span class="ticker-dot">•</span>
-          <span class="ticker-item">GIT & GITHUB</span>
+          <span class="ticker-item">GIT &amp; GITHUB</span>
           <span class="ticker-dot">•</span>
           <span class="ticker-item">POSTMAN</span>
           <span class="ticker-dot">•</span>
         </div>
-        <!-- Duplicate for infinite marquee loop -->
         <div class="ticker-content" aria-hidden="true">
           <span class="ticker-item">REACT.JS</span>
           <span class="ticker-dot">•</span>
@@ -553,7 +384,7 @@
           <span class="ticker-dot">•</span>
           <span class="ticker-item">REDUX</span>
           <span class="ticker-dot">•</span>
-          <span class="ticker-item">GIT & GITHUB</span>
+          <span class="ticker-item">GIT &amp; GITHUB</span>
           <span class="ticker-dot">•</span>
           <span class="ticker-item">POSTMAN</span>
           <span class="ticker-dot">•</span>
@@ -561,79 +392,137 @@
       </div>
     </section>
 
-    <!-- Call to Action Banner (Exact Reference Layout) -->
-    <section class="cta-banner-section" id="contact">
-      <div class="cta-banner">
-        <h2 class="cta-title">
-          LET'S CREATE<br>
-          SOMETHING GREAT<br>
-          TOGETHER.
-        </h2>
-        <a href="mailto:aryannn.ks@gmail.com" class="cta-circle-btn" aria-label="Send Email">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="7" y1="17" x2="17" y2="7"></line>
-            <polyline points="7 7 17 7 17 17"></polyline>
-          </svg>
-        </a>
-      </div>
+    <!-- Services & Capabilities Section (Frames 544 -> 721: Content strictly on LEFT; Character unobstructed on RIGHT) -->
+    <section class="services-about-section" id="services">
+      <div class="services-about-grid">
+        <!-- Left Content & Information Column -->
+        <div class="services-about-content">
+          <div class="overview-tag-pill">
+            <span class="pill-dot"></span>
+            02 / SERVICES &amp; EXPERTISE
+          </div>
 
-      <!-- Contact Info & Interactive Form -->
-      <div class="footer-info-grid">
-        <div class="footer-form-col">
-          <h3 class="footer-subheading">SEND A MESSAGE</h3>
-          <form class="contact-form" id="contact-form"
-            onsubmit="event.preventDefault(); alert('Thank you, Aryan has received your message!');">
-            <div class="form-row">
-              <input type="text" placeholder="Your Name" required class="form-input">
-              <input type="email" placeholder="Your Email" required class="form-input">
+          <h2 class="services-about-headline">
+            DESIGN IS SOLVING PROBLEMS <span class="highlight-red">WITH EMPATHY &amp; CODE.</span>
+          </h2>
+
+          <p class="services-about-bio">
+            I craft modern, scalable web applications and bespoke design systems. From full-stack MERN architectures to intuitive Figma interfaces, every product is engineered for maximum performance, aesthetic precision, and conversion.
+          </p>
+
+          <!-- 4 Services Cards in 2x2 Grid -->
+          <div class="services-mini-grid">
+            <div class="service-mini-card">
+              <div class="service-mini-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <div class="service-mini-info">
+                <h3 class="service-mini-title">WEB DESIGN &amp; DEV</h3>
+                <p class="service-mini-desc">High-performing, conversion-focused web apps.</p>
+              </div>
             </div>
-            <textarea placeholder="Enter your project details or message..." rows="3" required
-              class="form-textarea"></textarea>
-            <button type="submit" class="btn-submit">
-              SEND MESSAGE
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
+
+            <div class="service-mini-card">
+              <div class="service-mini-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                  <path d="M2 2l7.586 7.586"></path>
+                  <circle cx="11" cy="11" r="2"></circle>
+                </svg>
+              </div>
+              <div class="service-mini-info">
+                <h3 class="service-mini-title">UI/UX DESIGN</h3>
+                <p class="service-mini-desc">Intuitive interfaces &amp; Figma design systems.</p>
+              </div>
+            </div>
+
+            <div class="service-mini-card">
+              <div class="service-mini-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </div>
+              <div class="service-mini-info">
+                <h3 class="service-mini-title">BRANDING &amp; ASSETS</h3>
+                <p class="service-mini-desc">Bold visual identities &amp; design assets.</p>
+              </div>
+            </div>
+
+            <div class="service-mini-card">
+              <div class="service-mini-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="16 18 22 12 16 6"></polyline>
+                  <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+              </div>
+              <div class="service-mini-info">
+                <h3 class="service-mini-title">MERN FULL STACK</h3>
+                <p class="service-mini-desc">Scalable REST APIs &amp; React architecture.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skills & Action Row -->
+          <div class="services-action-row">
+            <a href="https://drive.google.com/file/d/173FW0jxBxwJafJapRmkyZjyjMNDnNvYN/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-download-resume">
+              DOWNLOAD RESUME
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
-            </button>
-          </form>
-        </div>
-
-        <div class="footer-links-col">
-          <h3 class="footer-subheading">GET IN TOUCH</h3>
-          <div class="footer-contact-details">
-            <a href="mailto:aryannn.ks@gmail.com" class="footer-link">aryannn.ks@gmail.com</a>
-            <span class="footer-text">+91 (Contact via Email / LinkedIn)</span>
-            <span class="footer-text">Bhubaneswar, Odisha, India</span>
+            </a>
+            <div class="services-tech-tags">
+              <span class="tech-pill">REACT</span>
+              <span class="tech-pill">NODE.JS</span>
+              <span class="tech-pill">FIGMA</span>
+              <span class="tech-pill">MONGODB</span>
+            </div>
           </div>
         </div>
 
-        <div class="footer-links-col">
-          <h3 class="footer-subheading">FOLLOW</h3>
-          <div class="footer-social-list">
-            <a href="https://github.com/AryanKumarSwain" target="_blank" rel="noopener noreferrer"
-              class="footer-link">GitHub ↗</a>
-            <a href="https://linkedin.com/in/aryan-ks/" target="_blank" rel="noopener noreferrer"
-              class="footer-link">LinkedIn ↗</a>
-            <a href="https://x.com/Aryannn_KS" target="_blank" rel="noopener noreferrer" class="footer-link">X (Twitter)
-              ↗</a>
-            <a href="https://www.instagram.com/aaryankumarswain" target="_blank" rel="noopener noreferrer"
-              class="footer-link">Instagram ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom-bar">
-        <span class="footer-copy">© 2026 ARYAN KUMAR SWAIN</span>
-        <span class="footer-rights">ALL RIGHTS RESERVED</span>
+        <!-- Right spacer column: 100% transparent & open for character who is on the right facing left -->
+        <div class="services-character-space" aria-hidden="true"></div>
       </div>
     </section>
 
+    <!-- Finale & Clean Footer (Frames 721 -> 872: Character centered with no elements overlapping) -->
+    <footer class="site-finale-footer" id="contact">
+      <!-- 100% open vertical canvas space for centered character -->
+      <div class="finale-character-stage" aria-hidden="true"></div>
+
+      <!-- Footer as it is -->
+      <div class="footer-bottom-container">
+        <div class="footer-top-row">
+          <div class="footer-bottom-brand">
+            <img src="swainLogo.png" alt="Aryan Kumar Swain" class="footer-bottom-logo">
+            <span class="footer-bottom-name">ARYAN KUMAR SWAIN</span>
+          </div>
+
+          <div class="footer-bottom-socials">
+            <a href="https://github.com/AryanKumarSwain" target="_blank" rel="noopener noreferrer" class="footer-link-item">GitHub ↗</a>
+            <a href="https://linkedin.com/in/aryan-ks/" target="_blank" rel="noopener noreferrer" class="footer-link-item">LinkedIn ↗</a>
+            <a href="https://x.com/Aryannn_KS" target="_blank" rel="noopener noreferrer" class="footer-link-item">X (Twitter) ↗</a>
+            <a href="https://www.instagram.com/aaryankumarswain" target="_blank" rel="noopener noreferrer" class="footer-link-item">Instagram ↗</a>
+            <a href="mailto:aryannn.ks@gmail.com" class="footer-link-item footer-mail-btn">aryannn.ks@gmail.com</a>
+          </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+          <span class="footer-copy">© 2026 ARYAN KUMAR SWAIN</span>
+          <span class="footer-rights">ALL RIGHTS RESERVED</span>
+        </div>
+      </div>
+    </footer>
+
   </main>
 
-  <script type="module" src="main.js?v=2"></script>
+  <script type="module" src="main.js?v=8"></script>
 </body>
 
 </html>
