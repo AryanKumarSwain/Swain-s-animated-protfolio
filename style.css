@@ -234,7 +234,16 @@ body.no-scroll {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow: none;
-  transition: padding 0.3s ease, background 0.3s ease;
+  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.navbar.scrolled {
+  padding: 13px 48px;
+  background-color: rgba(6, 6, 8, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 .nav-brand {
@@ -1390,3 +1399,165 @@ body.no-scroll {
     gap: 20px;
   }
 }
+
+/* ==========================================================================
+   SMOOTH SCROLL (LENIS) INTEGRATION
+   ========================================================================== */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   NATIVE HARDWARE RED CHEVRON CURSOR (100% Zero-Lag Hardware Rendering)
+   ========================================================================== */
+html, body {
+  cursor: url('cursor.png') 1 0, auto;
+}
+
+*, *::before, *::after {
+  cursor: url('cursor.png') 1 0, auto;
+}
+
+a, 
+button, 
+[role="button"], 
+.tilt-card, 
+.btn-magnetic, 
+.nav-link, 
+.social-icon-btn, 
+.btn-talk, 
+.btn-circle-action, 
+.btn-ghost, 
+.btn-download-resume, 
+.project-card, 
+.service-mini-card, 
+input, 
+select, 
+textarea {
+  cursor: url('cursor-hover.png') 1 0, pointer !important;
+}
+
+/* ==========================================================================
+   SCROLL-DRIVEN PARALLAX & HARDWARE ACCELERATED TRANSFORMS
+   ========================================================================== */
+.parallax-item {
+  transform: translate3d(var(--px, 0px), var(--py, 0px), 0px) rotate(var(--pr, 0deg)) skewY(var(--skew, 0deg));
+  will-change: transform;
+  transition: transform 0.1s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+/* ==========================================================================
+   REVEAL ON SCROLL ANIMATIONS (Active Theory / Editorial Easing)
+   ========================================================================== */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translate3d(0, 36px, 0);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Staggered transition delays for hero */
+.hero-headline.reveal-on-scroll { transition-delay: 0.1s; }
+.hero-statement.reveal-on-scroll { transition-delay: 0.22s; }
+.hero-description.reveal-on-scroll { transition-delay: 0.34s; }
+
+/* Staggered transition delays for grid cards */
+.overview-stats-grid .reveal-on-scroll:nth-child(1) { transition-delay: 0.05s; }
+.overview-stats-grid .reveal-on-scroll:nth-child(2) { transition-delay: 0.15s; }
+.overview-stats-grid .reveal-on-scroll:nth-child(3) { transition-delay: 0.25s; }
+.overview-stats-grid .reveal-on-scroll:nth-child(4) { transition-delay: 0.35s; }
+
+.projects-grid .reveal-on-scroll:nth-child(1) { transition-delay: 0.08s; }
+.projects-grid .reveal-on-scroll:nth-child(2) { transition-delay: 0.18s; }
+.projects-grid .reveal-on-scroll:nth-child(3) { transition-delay: 0.28s; }
+.projects-grid .reveal-on-scroll:nth-child(4) { transition-delay: 0.20s; }
+
+.services-mini-grid .reveal-on-scroll:nth-child(1) { transition-delay: 0.06s; }
+.services-mini-grid .reveal-on-scroll:nth-child(2) { transition-delay: 0.16s; }
+.services-mini-grid .reveal-on-scroll:nth-child(3) { transition-delay: 0.26s; }
+.services-mini-grid .reveal-on-scroll:nth-child(4) { transition-delay: 0.36s; }
+
+/* ==========================================================================
+   3D TILT CARDS & SPOTLIGHT GLARE (Awwwards / Santioni Spirits Effect)
+   ========================================================================== */
+.tilt-card {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tilt-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(550px circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.12), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.tilt-card:hover::before {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   INTERNAL FLOATING MOCKUP GRAPHICS
+   ========================================================================== */
+.float-item {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.project-card:hover .float-item {
+  transform: translateY(-8px) scale(1.04);
+}
+
+/* ==========================================================================
+   MAGNETIC BUTTONS
+   ========================================================================== */
+.btn-magnetic {
+  will-change: transform;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: inline-flex;
+}
+
+/* ==========================================================================
+   STAT NUMBER COUNTERS
+   ========================================================================== */
+.counter-val {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   TICKER HARDWARE ACCELERATION
+   ========================================================================== */
+.ticker-track {
+  will-change: transform;
+  transition: transform 0.15s ease-out;
+}
+

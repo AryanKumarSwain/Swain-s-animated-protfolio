@@ -30,6 +30,14 @@ let currentProgress = 0;
 let lastRenderedFrame = -1;
 let dpr = 1;
 
+// Motion Engine & Interaction State (Santioni Spirits style)
+let lenis = null;
+let scrollVelocity = 0;
+let targetSkew = 0;
+let currentSkew = 0;
+let tickerOffset = 0;
+
+
 // Helper to format frame path
 function getFramePath(index) {
   return `${FRAME_PREFIX}${String(index).padStart(6, '0')}${FRAME_EXT}`;
@@ -184,27 +192,37 @@ function handleResize() {
   if (lastRenderedFrame >= 0) {
     renderFrame(lastRenderedFrame);
   }
+
+  if (lenis) {
+    lenis.resize();
+  }
 }
 
-
 // Scroll calculation spanning the entire document height
-function onScroll() {
+function onScroll(explicitScroll) {
+  const currentY = typeof explicitScroll === 'number' ? explicitScroll : (lenis ? lenis.scroll : window.scrollY);
   const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
   if (scrollableHeight > 0) {
-    targetProgress = Math.min(Math.max(window.scrollY / scrollableHeight, 0), 1);
+    targetProgress = Math.min(Math.max(currentY / scrollableHeight, 0), 1);
   } else {
     targetProgress = 0;
   }
 
-  if (window.scrollY > 40) {
+  if (currentY > 40) {
     if (scrollPrompt) scrollPrompt.classList.add('hidden');
+    if (navbar) navbar.classList.add('scrolled');
   } else {
     if (scrollPrompt) scrollPrompt.classList.remove('hidden');
+    if (navbar) navbar.classList.remove('scrolled');
   }
 }
 
-// Smooth Linear Interpolation Animation Loop
-function animationLoop() {
+// Smooth Linear Interpolation Animation Loop (60/120fps sync)
+function animationLoop(time) {
+  if (lenis) {
+    lenis.raf(time);
+  }
+
   // Inertia lerp for ultra-smooth scrubbing
   const diff = targetProgress - currentProgress;
   if (Math.abs(diff) > 0.00005) {
@@ -225,6 +243,14 @@ function animationLoop() {
 
   // Adaptive background queue priority update around current playhead
   ensureLocalBuffer(frameIdx);
+
+  // Santioni Spirits dynamic scroll effects
+  updateParallaxElements();
+
+  currentSkew += (targetSkew - currentSkew) * 0.12;
+  targetSkew *= 0.92;
+
+  updateTickerTrack();
 
   requestAnimationFrame(animationLoop);
 }
@@ -281,23 +307,195 @@ function ensureLocalBuffer(centerIdx) {
   }
 }
 
-// Setup skill bars intersection observer
-function setupInteractions() {
-  const skillTrackers = document.querySelectorAll('.skill-fill');
-  if ('IntersectionObserver' in window && skillTrackers.length > 0) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.style.width = entry.target.style.getPropertyValue('--target-width') || '100%';
-        }
-      });
-    }, { threshold: 0.2 });
+// Init Lenis smooth scroll
+function initSmoothScroll() {
+  if (typeof window.Lenis !== 'undefined') {
+    lenis = new window.Lenis({
+      duration: 1.25,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.6,
+      infinite: false,
+    });
 
-    skillTrackers.forEach((tracker) => {
-      tracker.style.width = '0%';
-      observer.observe(tracker);
+    lenis.on('scroll', ({ scroll, velocity }) => {
+      scrollVelocity = velocity || 0;
+      targetSkew = Math.min(Math.max(scrollVelocity * 0.04, -2.5), 2.5);
+      onScroll(scroll);
     });
   }
+}
+
+// Parallax Component Movement Engine (Santioni Spirits / Active Theory style)
+function updateParallaxElements() {
+  const parallaxItems = document.querySelectorAll('.parallax-item');
+  const vh = window.innerHeight;
+  const vCenter = vh * 0.5;
+
+  for (let i = 0; i < parallaxItems.length; i++) {
+    const el = parallaxItems[i];
+    const rect = el.getBoundingClientRect();
+
+    // Check if element is near viewport
+    if (rect.bottom < -200 || rect.top > vh + 200) continue;
+
+    const elCenter = rect.top + rect.height * 0.5;
+    const distFromCenter = elCenter - vCenter;
+
+    const speedY = parseFloat(el.getAttribute('data-parallax-y') || 0);
+    const speedX = parseFloat(el.getAttribute('data-parallax-x') || 0);
+    const speedRotate = parseFloat(el.getAttribute('data-parallax-rotate') || 0);
+
+    const py = distFromCenter * speedY;
+    el.style.setProperty('--py', `${py.toFixed(1)}px`);
+
+    if (speedX !== 0) {
+      const px = distFromCenter * speedX;
+      el.style.setProperty('--px', `${px.toFixed(1)}px`);
+    }
+
+    if (speedRotate !== 0) {
+      const pr = distFromCenter * speedRotate;
+      el.style.setProperty('--pr', `${pr.toFixed(2)}deg`);
+    }
+
+    if (Math.abs(currentSkew) > 0.01) {
+      el.style.setProperty('--skew', `${currentSkew.toFixed(2)}deg`);
+    } else {
+      el.style.setProperty('--skew', '0deg');
+    }
+  }
+}
+
+// Ticker Marquee Velocity Response
+function updateTickerTrack() {
+  const tickerTrack = document.querySelector('.ticker-track');
+  if (!tickerTrack) return;
+  tickerOffset += (scrollVelocity * 0.5);
+  tickerOffset *= 0.94;
+  if (Math.abs(tickerOffset) > 0.1) {
+    tickerTrack.style.transform = `translate3d(${tickerOffset.toFixed(1)}px, 0, 0)`;
+  } else {
+    tickerTrack.style.transform = '';
+  }
+}
+
+// Scroll-triggered reveals
+function setupScrollReveals() {
+  const revealElements = document.querySelectorAll('.reveal-on-scroll');
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          if (entry.target.hasAttribute('data-counter')) {
+            animateCounter(entry.target);
+          }
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+    revealElements.forEach((el) => revealObserver.observe(el));
+  } else {
+    revealElements.forEach((el) => el.classList.add('is-revealed'));
+  }
+}
+
+// Number Counter Animation
+function animateCounter(card) {
+  if (card.dataset.counted) return;
+  card.dataset.counted = 'true';
+  const targetVal = parseInt(card.getAttribute('data-counter'), 10);
+  const counterEl = card.querySelector('.counter-val');
+  if (!counterEl || isNaN(targetVal)) return;
+
+  const duration = 1500;
+  const startTime = performance.now();
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    const current = Math.round(targetVal * ease);
+    counterEl.textContent = current;
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      counterEl.textContent = targetVal;
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+// 3D Tilt Cards with Spotlight Glare
+function setupTiltCards() {
+  const cards = document.querySelectorAll('.tilt-card');
+  cards.forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -6;
+      const rotateY = ((x - centerX) / centerX) * 6;
+
+      card.style.setProperty('--glare-x', `${((x / rect.width) * 100).toFixed(1)}%`);
+      card.style.setProperty('--glare-y', `${((y / rect.height) * 100).toFixed(1)}%`);
+      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+}
+
+// Magnetic Buttons
+function setupMagneticButtons() {
+  const magneticBtns = document.querySelectorAll('.btn-magnetic');
+  magneticBtns.forEach((btn) => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - (rect.left + rect.width / 2);
+      const y = e.clientY - (rect.top + rect.height / 2);
+      btn.style.transform = `translate3d(${(x * 0.28).toFixed(1)}px, ${(y * 0.28).toFixed(1)}px, 0)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate3d(0, 0, 0)';
+    });
+  });
+}
+
+// Smooth Anchor Links via Lenis
+function setupSmoothAnchorLinks() {
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', (e) => {
+      const targetId = anchor.getAttribute('href');
+      if (targetId === '#' || !targetId) return;
+      const target = document.querySelector(targetId);
+      if (target) {
+        e.preventDefault();
+        if (lenis) {
+          lenis.scrollTo(target, { offset: -20, duration: 1.4 });
+        } else {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+}
+
+// Setup skill bars, reveals, 3D tilt, magnetic buttons & anchor links
+function setupInteractions() {
+  initSmoothScroll();
+  setupScrollReveals();
+  setupTiltCards();
+  setupMagneticButtons();
+  setupSmoothAnchorLinks();
 }
 
 // Progressive Initial Loading
@@ -359,3 +557,4 @@ async function init() {
 }
 
 init();
+
