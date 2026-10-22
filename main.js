@@ -558,3 +558,10 @@ async function init() {
 
 init();
 
+// Local dev fallback for resume link (if running on localhost / file://)
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') {
+  const defaultResume = 'https://drive.google.com/file/d/173FW0jxBxwJafJapRmkyZjyjMNDnNvYN/view?usp=sharing';
+  document.querySelectorAll('a[href="/api/resume"]').forEach((link) => {
+    link.href = defaultResume;
+  });
+}
